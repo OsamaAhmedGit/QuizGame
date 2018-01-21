@@ -46,10 +46,11 @@ class ViewController: UIViewController {
             pickedAnswer = false /* IF FALSE IS PRESSED, SET PICKEDANSWER VARIABLE TO FALSE */
         }
         
-        playSound() /* CALL PLAYSOUND FUNCTION */
         checkAnswer() /* CALL CHECKANSWER FUNCTION */
+        showCorrectAnswer()
         nextQuestion() /* CALL NEXTQUESTION FUNCTION */
         updateUI() /* CALL UPDATEUI FUNCTION */
+        
     }
     
     /* FUNCTION WHICH CHECKS THE USERS ANSWER TO THE CORRECT ANSWER OF THE QUESTION */
@@ -57,19 +58,12 @@ class ViewController: UIViewController {
         if pickedAnswer == correctAnswer{ /* IF ANSWER MATCHES THE CORRECT ANSWER +1 TO POINTS AND SHOW SUCCESS HUD */
             points += 1
             ProgressHUD.showSuccess("Correct!") /* 3RD PARTY HUD */
+            correctSound = SoundManager(FileName: "correct")
             correctSound?.playSound() /* CALL THE PLAYSOUND FUNCTION IN THE SOUNDMANAGER CLASS */
         } else{
             ProgressHUD.showError("Wrong!")
-            incorrectSound?.playSound()
-        }
-    }
-    
-    /* FUNCTION TO SET THE CORRECT SOUNDS DEPENDING ON THE CORRECTANSWER OF THE QUESTION */
-    func playSound(){
-        if correctAnswer == true{
-            correctSound = SoundManager(FileName: "correct")
-        } else if correctAnswer == false{
             incorrectSound = SoundManager(FileName: "incorrect")
+            incorrectSound?.playSound()
         }
     }
     
@@ -106,6 +100,23 @@ class ViewController: UIViewController {
         alertController.addAction(restartAction) /* ADD RESTART ACTION TO THE ALERT CONTROLLER */
         
         self.present(alertController, animated: true, completion: nil) /* SHOW THE ALERT WINDOW ON THE SCREEN */
+    }
+    
+    func showCorrectAnswer(){
+        if correctAnswer == false{
+            let alertController = UIAlertController(title: "Answer:", message:
+                questionManager.questionArray[questionNumber].correctAnswer, preferredStyle: UIAlertControllerStyle.alert)
+            
+            if questionNumber < questionManager.questionArray.count - 1{
+                alertController.addAction(UIAlertAction(title: "Dismiss", style: .default,handler: nil))
+            } else{
+                alertController.title = "You Scored " + "\(points)" + "/" + "\(questionManager.questionArray.count)"
+                alertController.message = "Answer: " + questionManager.questionArray[questionNumber].correctAnswer
+                alertController.addAction(UIAlertAction(title: "Restart Quiz", style: .default, handler: {(UIAlertAction) in self.restartQuiz()}))
+            }
+            
+            self.present(alertController, animated: true, completion: nil)
+        }
     }
     
 }

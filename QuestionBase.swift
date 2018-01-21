@@ -13,11 +13,12 @@ class QuestionBase {
     
     var question: String /* QUESTION VARIABLE */
     var answer: Bool /* ANSWER VARIABLE */
-    
+    var correctAnswer: String
     
     /* INITIALIZE FUNCTION WHICH SETS THE QUESTION AND ANSWER PASSED INTO IT WHEN A NEW INSTANCE IS CREATED */
-    init(Question: String, Answer: Bool) {
+    init(Question: String, Answer: Bool, CorrectAnswer: String) {
         question = Question
         answer = Answer
+        correctAnswer = CorrectAnswer
     }
 }
